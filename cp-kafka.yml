@@ -1,0 +1,143 @@
+version: '2'
+services:
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper-1
+    network_mode: host
+    ports:
+      - "12181:12181"
+      - "13888:13888"
+      - "12888:12888"
+    deploy:
+      placement:
+          constraints:
+            - node.labels.zoo==1
+      restart_policy:
+          condition: on-failure
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 12181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:12888:13888;zookeeper-2:22888:23888;zookeeper-3:32888:33888
+
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper-2
+    network_mode: host
+    ports:
+      - "22181:22181"
+      - "23888:23888"
+      - "22888:22888"
+    deploy:
+      placement:
+          constraints:
+            - node.labels.zoo==3
+      restart_policy:
+          condition: on-failure
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:12888:13888;zookeeper-2:22888:23888;zookeeper-3:32888:33888
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper-3
+    network_mode: host
+    ports:
+      - "32181:32181"
+      - "33888:33888"
+      - "32888:32888"
+    deploy:
+      placement:
+          constraints:
+            - node.labels.zoo==3
+      restart_policy:
+          condition: on-failure
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:12888:13888;zookeeper-2:22888:23888;zookeeper-3:32888:33888
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-1
+    network_mode: host
+    ports:
+      - "19092:19092"
+      - "9093:9093"
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    deploy:
+      placement:
+        constraints:
+          - node.labels.kafka==1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:12181,zookeeper-2:12181,zookeeper-3:12181
+      KAFKA_LISTENERS: INT://:9093,EXT://0.0.0.0:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INT:PLAINTEXT,EXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INT
+      KAFKA_ADVERTISED_LISTENERS: INT://:9093,EXT://ec2-3-21-198-203.us-east-2.compute.amazonaws.com:19092
+
+
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-2
+    network_mode: host
+    ports:
+      - "29092:29092"
+      - "9094:9094"
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    deploy:
+      placement:
+        constraints:
+          - node.labels.kafka==2
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:12181,zookeeper-2:12181,zookeeper-3:12181
+      KAFKA_LISTENERS: INT://:9094,EXT://0.0.0.0:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INT:PLAINTEXT,EXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INT
+      KAFKA_ADVERTISED_LISTENERS: INT://:9094,EXT://ec2-3-21-175-113.us-east-2.compute.amazonaws.com:29092
+
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka-3
+    network_mode: host
+    ports:
+      - "39092:39092"
+      - "9095:9095"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.kafka==1
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:12181,zookeeper-2:12181,zookeeper-3:12181
+      KAFKA_LISTENERS: INT://:9095,EXT://0.0.0.0:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INT:PLAINTEXT,EXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INT
+      KAFKA_ADVERTISED_LISTENERS: INT://:9095,EXT://ec2-13-58-140-213.us-east-2.compute.amazonaws.com:39092
+
+
+
+
+# mode host
+#add zoo=3 label
