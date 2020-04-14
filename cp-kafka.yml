@@ -1,4 +1,4 @@
-version: '2'
+version: '3.7'
 services:
   zookeeper-1:
     image: confluentinc/cp-zookeeper:latest
@@ -33,7 +33,7 @@ services:
     deploy:
       placement:
           constraints:
-            - node.labels.zoo==3
+            - node.labels.zoo==2
       restart_policy:
           condition: on-failure
     environment:
@@ -72,7 +72,7 @@ services:
     network_mode: host
     ports:
       - "19092:19092"
-      - "9093:9093"
+      - "19093:19093"
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -84,10 +84,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:12181,zookeeper-2:12181,zookeeper-3:12181
-      KAFKA_LISTENERS: INT://:9093,EXT://0.0.0.0:19092
+      KAFKA_LISTENERS: INT://:19093,EXT://0.0.0.0:19092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INT:PLAINTEXT,EXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
-      KAFKA_ADVERTISED_LISTENERS: INT://:9093,EXT://ec2-3-21-198-203.us-east-2.compute.amazonaws.com:19092
+      KAFKA_ADVERTISED_LISTENERS: INT://:19093,EXT://ec2-3-21-198-203.us-east-2.compute.amazonaws.com:19092
 
 
   kafka-2:
@@ -96,7 +96,7 @@ services:
     network_mode: host
     ports:
       - "29092:29092"
-      - "9094:9094"
+      - "19094:19094"
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -108,10 +108,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:12181,zookeeper-2:12181,zookeeper-3:12181
-      KAFKA_LISTENERS: INT://:9094,EXT://0.0.0.0:29092
+      KAFKA_LISTENERS: INT://:19094,EXT://0.0.0.0:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INT:PLAINTEXT,EXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
-      KAFKA_ADVERTISED_LISTENERS: INT://:9094,EXT://ec2-3-21-175-113.us-east-2.compute.amazonaws.com:29092
+      KAFKA_ADVERTISED_LISTENERS: INT://:19094,EXT://ec2-3-21-175-113.us-east-2.compute.amazonaws.com:29092
 
   kafka-3:
     image: confluentinc/cp-kafka:latest
@@ -119,11 +119,11 @@ services:
     network_mode: host
     ports:
       - "39092:39092"
-      - "9095:9095"
+      - "19095:19095"
     deploy:
       placement:
         constraints:
-          - node.labels.kafka==1
+          - node.labels.kafka==3
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -131,10 +131,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:12181,zookeeper-2:12181,zookeeper-3:12181
-      KAFKA_LISTENERS: INT://:9095,EXT://0.0.0.0:39092
+      KAFKA_LISTENERS: INT://:19095,EXT://0.0.0.0:39092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INT:PLAINTEXT,EXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
-      KAFKA_ADVERTISED_LISTENERS: INT://:9095,EXT://ec2-13-58-140-213.us-east-2.compute.amazonaws.com:39092
+      KAFKA_ADVERTISED_LISTENERS: INT://:19095,EXT://ec2-13-58-140-213.us-east-2.compute.amazonaws.com:39092
 
 
 
