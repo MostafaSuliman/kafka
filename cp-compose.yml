@@ -6,8 +6,9 @@ services:
     networks:
       - kafka-net
     ports:
-      - 2181:2181
-
+      - 12181:12181
+      - 13888:13888
+      - 12888:12888
     deploy:
       placement:
           constraints:
@@ -16,12 +17,11 @@ services:
           condition: on-failure
     environment:
       ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_CLIENT_PORT: 12181
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_INIT_LIMIT: 5
       ZOOKEEPER_SYNC_LIMIT: 2
-      ZOOKEEPER_SERVERS: zookeeper-1:2181
-
+      ZOOKEEPER_SERVERS: zookeeper-1:12888:13888
   kafka-1:
     image: confluentinc/cp-kafka:latest
     hostname: kafka-1
