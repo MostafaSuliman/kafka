@@ -6,19 +6,9 @@ services:
     networks:
       - kafka-net
     ports:
-      - target: 12181
-        published: 12181
-        protocol: tcp
-        mode: host
-      - target: 13888
-        published: 13888
-        protocol: tcp
-        mode: host
-      - target: 12888
-        published: 12888
-        protocol: tcp
-        mode: host
-
+      - 12181:12181
+      - 13888:13888
+      - 12888:12888
     deploy:
       placement:
           constraints:
@@ -39,18 +29,9 @@ services:
     networks:
       - kafka-net
     ports:
-      - target: 22181
-        published: 22181
-        protocol: tcp
-        mode: host
-      - target: 23888
-        published: 23888
-        protocol: tcp
-        mode: host
-      - target: 2888
-        published: 22888
-        protocol: tcp
-        mode: host
+      - 22181:22181
+      - 23888:23888
+      - 22888:22888
 
     deploy:
       placement:
@@ -72,19 +53,10 @@ services:
     networks:
       - kafka-net
     ports:
-      - target: 32181
-        published: 32181
-        protocol: tcp
-        mode: host
-      - target: 33888
-        published: 33888
-        protocol: tcp
-        mode: host
-      - target: 32888
-        published: 32888
-        protocol: tcp
-        mode: host
-
+      - 32181:32181
+      - 33888:33888
+      - 32888:32888
+      
     deploy:
       placement:
           constraints:
@@ -105,14 +77,9 @@ services:
     networks:
       - kafka-net
     ports:
-      - target: 19092
-        published: 19092
-        protocol: tcp
-        mode: host
-      - target: 19093
-        published: 19093
-        protocol: tcp
-        mode: host
+      - 19092:19092
+      - 19093:19093
+      
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -136,14 +103,9 @@ services:
     networks:
       - kafka-net
     ports:
-      - target: 29092
-        published: 29092
-        protocol: tcp
-        mode: host
-      - target: 19094
-        published: 19094
-        protocol: tcp
-        mode: host
+      - 29092:29092
+      - 19094:19094
+      
     depends_on:
       - zookeeper-1
       - zookeeper-2
@@ -166,15 +128,9 @@ services:
     networks:
       - kafka-net
     ports:
-      - target: 39092
-        published: 39092
-        protocol: tcp
-        mode: host
-      - target: 19095
-        published: 19095
-        protocol: tcp
-        mode: host
-
+      - 39092:39092
+      - 19095:19095
+    
     deploy:
       placement:
         constraints:
